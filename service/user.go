@@ -5,17 +5,22 @@ import (
 	"gin-Vue/models"
 	"gin-Vue/pkg/e"
 	"gin-Vue/serialize"
+	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 type RegisterService struct {
-	Name     string `json:"name" form:"name"`
-	Password string `json:"password" form:"password"`
+	Name       string `json:"name" form:"name"`
+	Password   string `json:"password" form:"password"`
+	RePassword string `json:"re_password" form:"re_password"`
+	Phone      string `json:"phone" form:"phone"`
+}
+type LoginService struct {
 	Phone    string `json:"phone" form:"phone"`
+	Password string `json:"password" form:"password"`
 }
 
 func (service *RegisterService) Register() serialize.Response {
-	print(service.Phone)
 	if len(service.Phone) < 11 {
 		code := e.Error
 		return serialize.Response{
@@ -32,6 +37,15 @@ func (service *RegisterService) Register() serialize.Response {
 			Msg:    e.GetMgsg(code),
 			Data:   nil,
 			Error:  "密码长度不能少于6",
+		}
+	}
+	if service.RePassword != service.Password {
+		code := e.Error
+		return serialize.Response{
+			Status: code,
+			Msg:    e.GetMgsg(code),
+			Data:   nil,
+			Error:  "两次输入密码不一致",
 		}
 	}
 	exit := dao.PhoneIsExit(service.Phone)
@@ -57,4 +71,32 @@ func (service *RegisterService) Register() serialize.Response {
 		Error:  "",
 	}
 
+}
+
+func (service *LoginService) Login() serialize.Response {
+	if len(service.Phone) < 11 {
+		code := e.Error
+		return serialize.Response{
+			Status: code,
+			Msg:    e.GetMgsg(code),
+			Data:   nil,
+			Error:  "手机号格式不正确",
+		}
+	}
+	if len(service.Password) < 6 {
+		code := e.Error
+		return serialize.Response{
+			Status: code,
+			Msg:    e.GetMgsg(code),
+			Data:   nil,
+			Error:  "密码长度不能少于6",
+		}
+	}
+	user, str := dao.GetUserInfo(service.Phone, service.Password)
+	return serialize.Response{
+		Status: 200,
+		Msg:    str,
+		Data:   gin.H{"userInfo": user},
+		Error:  "",
+	}
 }
