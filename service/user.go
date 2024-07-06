@@ -5,6 +5,7 @@ import (
 	"gin-Vue/models"
 	"gin-Vue/pkg/e"
 	"gin-Vue/serialize"
+	"gin-Vue/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -92,11 +93,13 @@ func (service *LoginService) Login() serialize.Response {
 			Error:  "密码长度不能少于6",
 		}
 	}
+
 	user, str := dao.GetUserInfo(service.Phone, service.Password)
+	tokenString := utils.ReleaseToken(user)
 	return serialize.Response{
 		Status: 200,
 		Msg:    str,
-		Data:   gin.H{"userInfo": user},
+		Data:   gin.H{"userInfo": user, "token": tokenString},
 		Error:  "",
 	}
 }
