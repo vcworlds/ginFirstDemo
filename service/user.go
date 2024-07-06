@@ -95,6 +95,14 @@ func (service *LoginService) Login() serialize.Response {
 	}
 
 	user, str := dao.GetUserInfo(service.Phone, service.Password)
+	if user == nil {
+		return serialize.Response{
+			Status: 420,
+			Msg:    "获取用户失败",
+			Data:   nil,
+			Error:  str,
+		}
+	}
 	tokenString := utils.ReleaseToken(user)
 	return serialize.Response{
 		Status: 200,
