@@ -36,3 +36,12 @@ func Login(ctx *gin.Context) {
 	}
 	response.Success(ctx, res.Data, res.Msg)
 }
+
+func Userinfo(ctx *gin.Context) {
+	user, exit := ctx.Get("user")
+	if !exit {
+		response.Error(ctx, "获取失败")
+		return
+	}
+	response.Success(ctx, user, "获取成功")
+}
