@@ -12,5 +12,5 @@ func main() {
 	dao.InitDB()
 	// 路由加载
 	r = routers.NewRouter(r)
-	_ = r.Run(":1080")
+	_ = r.Run(":1061")
 }
