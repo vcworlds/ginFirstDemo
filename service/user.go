@@ -7,7 +7,6 @@ import (
 	"gin-Vue/serialize"
 	"gin-Vue/utils"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 type RegisterService struct {
@@ -52,7 +51,7 @@ func (service *RegisterService) Register() serialize.Response {
 	exit := dao.PhoneIsExit(service.Phone)
 	if exit {
 		return serialize.Response{
-			Status: http.StatusOK,
+			Status: e.Error,
 			Msg:    "手机号已被注册",
 			Data:   nil,
 			Error:  "手机号已被注册",
