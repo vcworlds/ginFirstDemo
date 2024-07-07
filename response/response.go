@@ -13,5 +13,5 @@ func Success(c *gin.Context, data interface{}, msg string) {
 }
 
 func Error(c *gin.Context, msg string) {
-	Response(c, http.StatusOK, 420, nil, msg)
+	Response(c, http.StatusUnprocessableEntity, 422, nil, msg)
 }

@@ -25,7 +25,7 @@ func InitDB() {
 		panic("连接数据库失败, error=" + err.Error())
 	}
 	// 连接成功
-	err = db.AutoMigrate(&models.User{})
+	err = db.AutoMigrate(&models.User{}, &models.Category{})
 	if err != nil {
 		fmt.Println("迁移数据库失败", err)
 		return
