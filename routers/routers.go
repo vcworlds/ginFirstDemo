@@ -20,9 +20,10 @@ func NewRouter(r *gin.Engine) *gin.Engine {
 
 	postCategoryRouters := r.Group("/post")
 	postController := controller.NewPostController()
+	postCategoryRouters.Use(middleware.AuthMiddleware())
 	postCategoryRouters.POST("", middleware.AuthMiddleware(), postController.Create)
-	postCategoryRouters.DELETE("", postController.Delete)
-	postCategoryRouters.PUT("", postController.Update)
-	postCategoryRouters.GET("", postController.Show)
+	postCategoryRouters.DELETE("/:id", postController.Delete)
+	postCategoryRouters.PUT("/:id", postController.Update)
+	postCategoryRouters.GET("/:id", postController.Show)
 	return r
 }

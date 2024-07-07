@@ -44,11 +44,26 @@ func (p PostController) Delete(ctx *gin.Context) {
 }
 
 func (p PostController) Update(ctx *gin.Context) {
-	//TODO implement me
-	panic("implement me")
+	var postService service.PostService
+	err := ctx.ShouldBind(&postService)
+	if err != nil {
+		response.Error(ctx, "获取数据失败")
+		return
+	}
+	user, _ := ctx.Get("user")
+	postId, exits := ctx.Params.Get("id")
+	if !exits {
+		response.Error(ctx, "id获取失败")
+		return
+	}
+	res := postService.UpdatePost(user.(models.User), postId)
+	if res.Status != 200 {
+		response.Error(ctx, res.Error)
+		return
+	}
+	response.Success(ctx, res.Data, res.Msg)
 }
 
 func (p PostController) Show(ctx *gin.Context) {
-	//TODO implement me
-	panic("implement me")
+	postId :=
 }

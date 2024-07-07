@@ -43,3 +43,29 @@ func (service PostService) CreatePost(user models.User) serialize.Response {
 		Error:  "",
 	}
 }
+
+func (service PostService) UpdatePost(user models.User, postId string) serialize.Response {
+	updatePost := models.Post{
+		Content:    service.Content,
+		Title:      service.Title,
+		CategoryId: service.CategoryId,
+		PostImg:    service.PostImg,
+		UpdateAt:   time.Now(),
+	}
+	str, post, exits := dao.UpdatePost(postId, user.ID, updatePost)
+	if !exits {
+		code := http.StatusUnprocessableEntity
+		return serialize.Response{
+			Status: code,
+			Msg:    "",
+			Data:   nil,
+			Error:  str,
+		}
+	}
+	return serialize.Response{
+		Status: http.StatusOK,
+		Msg:    "更新成功",
+		Data:   post,
+		Error:  "",
+	}
+}
