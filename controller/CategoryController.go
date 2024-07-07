@@ -55,7 +55,6 @@ func (c CategoryController) Delete(ctx *gin.Context) {
 		response.Error(ctx, "删除失败")
 		return
 	}
-
 	// 如果删除成功，返回成功信息
 	response.Success(ctx, nil, "删除成功")
 }
@@ -77,8 +76,7 @@ func (c CategoryController) Update(ctx *gin.Context) {
 		return
 	}
 	var updateCategory models.Category
-	dao.DB.Take(&updateCategory, categoryId)
-	dao.DB.First(&updateCategory).Update("name", category.Name)
+	dao.DB.Take(&updateCategory, categoryId).Update("name", category.Name)
 	response.Success(ctx, gin.H{"category": updateCategory}, "更新成功")
 
 }
