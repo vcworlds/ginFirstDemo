@@ -19,7 +19,7 @@ func NewPostController() ICategoryController {
 }
 
 func (p PostController) Create(ctx *gin.Context) {
-	var postService service.PostService
+	postService := &service.PostService{}
 	err := ctx.ShouldBind(&postService)
 	if err != nil {
 		response.Error(ctx, "数据绑定失败")
@@ -39,8 +39,23 @@ func (p PostController) Create(ctx *gin.Context) {
 }
 
 func (p PostController) Delete(ctx *gin.Context) {
-	//TODO implement me
-	panic("implement me")
+	postId, exits := ctx.Params.Get("id")
+	if !exits {
+		response.Error(ctx, "获取文章id失败")
+		return
+	}
+	user, ok := ctx.Get("user")
+	if !ok {
+		response.Error(ctx, "token查询用户失败")
+		return
+	}
+	res := service.DeletePost(postId, user.(models.User))
+	if res.Status != 200 {
+		response.Error(ctx, res.Error)
+		return
+	}
+	response.Success(ctx, nil, "删除成功")
+
 }
 
 func (p PostController) Update(ctx *gin.Context) {

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"gin-Vue/dao"
 	"gin-Vue/models"
 	"gin-Vue/pkg/e"
@@ -18,7 +19,7 @@ type PostService struct {
 	PostImg    string `json:"postImg" form:"postImg"`
 }
 
-func (service PostService) CreatePost(user models.User) serialize.Response {
+func (service *PostService) CreatePost(user models.User) serialize.Response {
 	var postController = &models.Post{
 		Title:      service.Title,
 		Content:    service.Content,
@@ -45,7 +46,7 @@ func (service PostService) CreatePost(user models.User) serialize.Response {
 	}
 }
 
-func (service PostService) UpdatePost(user models.User, postId string) serialize.Response {
+func (service *PostService) UpdatePost(user models.User, postId string) serialize.Response {
 	updatePost := models.Post{
 		Content:    service.Content,
 		Title:      service.Title,
@@ -88,4 +89,23 @@ func GetPost(postId string) serialize.Response {
 		Data:   gin.H{"post": post},
 		Error:  "",
 	}
+}
+
+func DeletePost(postId string, user models.User) serialize.Response {
+	exits, err, msg := dao.DeletePost(postId, user.ID)
+	if !exits {
+		return serialize.Response{
+			Status: http.StatusUnprocessableEntity,
+			Msg:    msg,
+			Data:   nil,
+			Error:  fmt.Sprintf("err:%v", err),
+		}
+	}
+	return serialize.Response{
+		Status: http.StatusOK,
+		Msg:    msg,
+		Data:   nil,
+		Error:  "",
+	}
+
 }
