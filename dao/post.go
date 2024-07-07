@@ -27,3 +27,11 @@ func UpdatePost(id string, userid uint, UpdatePost models.Post) (string, *models
 	}
 	return "修改成功", post, true
 }
+
+func GetPost(id string) (*models.Post, bool, error) {
+	var post models.Post
+	if err := DB.Take(&post, id).Error; err != nil {
+		return nil, false, err
+	}
+	return &post, true, nil
+}

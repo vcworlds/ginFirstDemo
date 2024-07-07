@@ -5,6 +5,7 @@ import (
 	"gin-Vue/models"
 	"gin-Vue/pkg/e"
 	"gin-Vue/serialize"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
 )
@@ -66,6 +67,25 @@ func (service PostService) UpdatePost(user models.User, postId string) serialize
 		Status: http.StatusOK,
 		Msg:    "更新成功",
 		Data:   post,
+		Error:  "",
+	}
+}
+
+func GetPost(postId string) serialize.Response {
+	post, exits, err := dao.GetPost(postId)
+	if !exits || err != nil {
+		code := http.StatusUnprocessableEntity
+		return serialize.Response{
+			Status: code,
+			Msg:    e.GetMgsg(code),
+			Data:   nil,
+			Error:  "获取文章数据失败",
+		}
+	}
+	return serialize.Response{
+		Status: http.StatusOK,
+		Msg:    "获取成功",
+		Data:   gin.H{"post": post},
 		Error:  "",
 	}
 }

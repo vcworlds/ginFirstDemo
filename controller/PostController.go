@@ -65,5 +65,16 @@ func (p PostController) Update(ctx *gin.Context) {
 }
 
 func (p PostController) Show(ctx *gin.Context) {
-	postId :=
+	postId, exits := ctx.Params.Get("id")
+	if !exits {
+		response.Error(ctx, "获取文章id失败")
+		return
+	}
+	res := service.GetPost(postId)
+	if res.Status != 200 {
+		response.Error(ctx, res.Error)
+		return
+	}
+	response.Success(ctx, res.Data, res.Msg)
+
 }
